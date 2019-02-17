@@ -17,13 +17,6 @@ class Background{
     ctx.font = "30px Monospace";
     ctx.fillStyle = "white";
     ctx.fillText ("GAME OVER", 95, 180);
-    clearInterval(score);
-    ctx.clearRect(160, 30, 35, 15);
-    ctx.fillStyle = "black"
-    ctx.fillRect(160, 30, 35, 15);
-    ctx.font = "10px Monospace";
-    ctx.fillStyle = "white";
-    ctx.fillText("FINAL SCORE", 145, 40);
   }
   draw(){
     this.y++;
@@ -31,10 +24,10 @@ class Background{
     ctx.drawImage(this.image, this.x, this.y ,this.width, this.height); 
     ctx.drawImage(this.image, this.x, this.y - this.height , this.width, this.height); 
     ctx.fillStyle = "black"
-    ctx.fillRect(140, 0, 75, 50);
-    ctx.font = "10px Monospace";
+    ctx.fillRect(115, 0, 120, 30);
+    ctx.font = "20px Monospace";
     ctx.fillStyle = "white";
-    ctx.fillText("SCORE", 162, 40);
+    ctx.fillText("SCORE " + score, 130, 20);
   }
 }
 
@@ -77,7 +70,8 @@ var car = new Car();
 var frames = 0;
 var obstacles = [];
 var interval;
-let startedGame = false;
+var score = 0;
+var startedGame = false;
 
 function randomNum(max, min){
   return Math.floor(Math.random() * (max - min) + min);
@@ -92,7 +86,11 @@ function generateObstacles(){
 
 function drawObstacles(){
   obstacles.forEach((obstacle, index) => {
-    if (obstacle.y > canvas.height) obstacles.splice(index, 1);
+    if (obstacle.y > canvas.height){
+      score ++;
+     return obstacles.splice(index, 1); 
+    }
+    
     obstacle.draw();
     if(car.collision(obstacle)){
       background.gameOver();
@@ -112,17 +110,9 @@ window.onload = function(){
       drawObstacles();
     }, 1000 / 250);
   }
-
   document.getElementById("start-button").onclick = function() {
     startGame();
-    var l = document.getElementById("number");
-    var n = 1;
-    score = setInterval(function(){
-      l.innerHTML = n;
-      n++;
-    },750);
   };
-
   document.addEventListener("keydown", function(event){
     if(event.keyCode === 37 && car.x >= 40){
       car.x -= 25;
@@ -130,4 +120,4 @@ window.onload = function(){
       car.x += 25;
     }
   });
-}; 
+};
